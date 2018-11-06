@@ -1,0 +1,60 @@
+#!/bin/bash
+
+#Update hue hub URL here
+#E.g. url="192.168.1.24"
+
+url="192.168.3.8"
+next="false"
+
+if [[ "$url" == "" ]]; then
+	echo "Edit this script and add your HUE hub IP"
+fi
+
+if [[ "$1" == "" ]]; then
+	echo "Usage: $0 <light ID> [Optional: turn on afterwards (true/false)]"
+	exit 1
+fi
+if [[ "$2" == "true" ]]; then
+	next="true"
+fi
+
+username=$(cat user.txt)
+lightid=$1
+
+function submitreq () {
+
+	curl -s -H "Accept:application/json" -X PUT -d "$json" -o /dev/null http://$url/api/$username/lights/$lightid/state
+
+
+}
+
+function setLight () {
+	trans=0
+	bness=255
+
+	if [[ "$2" != "" ]]; then
+		transt=$2
+	fi
+	if [[ "$3" != "" ]]; then
+		bness="$3"
+	fi
+
+	if [[ "$1" == "on" ]]; then
+		json='{"on":true,"bri":'"$bness"',"hue":7170,"transitiontime":'$transt'}'
+	elif [[ "$1" == "end" ]]; then
+		json='{"on":true,"bri":49,"hue":7170,"transitiontime":'$transt'}'
+	else
+		json='{"on":false,"bri":'$bness',"transitiontime":'$transt'}'
+	fi
+	submitreq
+}
+
+
+sleep 0.1
+setLight "on" "5" "5"
+sleep 0.5
+setLight "on" "0" "20"
+sleep 0.1
+if [[ "$next" == "true" ]]; then
+	setLight "end"
+fi

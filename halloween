@@ -1,0 +1,65 @@
+#!/bin/bash
+
+function rand() {
+	value=$(printf $(od -An -N1 -i /dev/random))
+	if [[ $value -lt 26 ]]; then
+		echo "1"
+	elif [[ $value -lt 51 ]]; then
+		echo "2"
+	elif [[ $value -lt 76 ]]; then
+		echo "3"
+	elif [[ $value -lt 101 ]]; then
+		echo "4"
+	elif [[ $value -lt 126 ]]; then
+		echo "5"
+	elif [[ $value -lt 151 ]]; then
+		echo "6"
+	elif [[ $value -lt 176 ]]; then
+		echo "7"
+	elif [[ $value -lt 201 ]]; then
+		echo "8"
+	elif [[ $value -lt 226 ]]; then
+		echo "9"
+	else
+		echo "10"
+	fi
+}
+
+
+exit="false"
+while [[ "$exit" != "true" ]]; do
+
+
+sl=$(rand)
+id=0
+if [[ $sl -lt 4 ]]; then
+	id="7"
+elif [[ $sl -lt 7 ]]; then
+	id="8"
+else
+	id="6"
+fi
+
+if [[ "$id" != "6" ]]; then
+	sl=$(rand)
+	sl=${sl:0:1}
+	if [[ $sl -lt 4 ]]; then
+		echo "Lightning bulb $id"
+		bash lightningStrike $id true
+	elif [[ $sl -lt 7 ]]; then
+		echo "dim bulb $id"
+		bash dim $id
+	else
+		echo "Flicker bulb $id"
+		bash flicker $id
+	fi
+else
+	echo "Lightning bulb 6"
+	bash lightningStrike $id
+fi
+
+sl=$(rand)
+sl=${sl:0:2}
+echo "Sleep $sl"
+sleep $sl
+done
