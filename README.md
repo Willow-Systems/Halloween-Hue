@@ -32,7 +32,7 @@ You should now have a file called user.txt containing a string similar to '1028d
 
 ### Update the IPs
 
-Now that you have the user.txt file in the same directory as the scripts, the final steps is to edit the line:
+Now that you have the user.txt file in the same directory as the scripts, the final steps in each script is to edit the line:
 
 `URL=""`
 
